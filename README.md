@@ -1,16 +1,20 @@
-# Bolt for JavaScript Template App
+# Slack Airtable Sales CRM Integration
 
-This is a generic Bolt for JavaScript template app used to build out Slack apps.
+This is a Slack app that integrates with Airtable to streamline sales workflow. It uses the [Bolt for JavaScript](https://slack.dev/bolt-js/tutorial/getting-started) framework.
 
-Before getting started, make sure you have a development workspace where you have permissions to install apps. If you don’t have one setup, go ahead and [create one](https://slack.com/create).
-## Installation
+## What it does
 
-#### Create a Slack App
-1. Open [https://api.slack.com/apps/new](https://api.slack.com/apps/new) and choose "From an app manifest"
-2. Choose the workspace you want to install the application to
-3. Copy the contents of [manifest.json](./manifest.json) into the text box that says `*Paste your manifest code here*` (within the JSON tab) and click *Next*
-4. Review the configuration and click *Create*
-5. Click *Install to Workspace* and *Allow* on the screen that follows. You'll then be redirected to the App Configuration dashboard.
+This app allows you to:
+
+- Notify your team when a new opportunity is added to Airtable
+- Notify your team when an oppotunity status is updated
+- Slack commands to view and update opportunities
+
+## Architecture
+
+This app is built using the [Bolt for JavaScript](https://slack.dev/bolt-js/tutorial/getting-started) framework. It uses the [Airtable API](https://airtable.com/api) to read and write data to Airtable.
+
+![Architecture Diagram](/assets/architecture.png?raw=true "Architecture Diagram")
 
 #### Environment Variables
 Before you can run the app, you'll need to store some environment variables.
@@ -21,12 +25,6 @@ Before you can run the app, you'll need to store some environment variables.
 
 ### Setup Your Local Project
 ```zsh
-# Clone this project onto your machine
-git clone https://github.com/slack-samples/bolt-js-starter-template.git
-
-# Change into this project directory
-cd bolt-js-starter-template
-
 # Install dependencies
 npm install
 
@@ -54,27 +52,3 @@ npm run lint
 
 Every incoming request is routed to a "listener". Inside this directory, we group each listener based on the Slack Platform feature used, so `/listeners/shortcuts` handles incoming [Shortcuts](https://api.slack.com/interactivity/shortcuts) requests, `/listeners/views` handles [View submissions](https://api.slack.com/reference/interaction-payloads/views#view_submission) and so on.
 
-
-## App Distribution / OAuth
-
-Only implement OAuth if you plan to distribute your application across multiple workspaces. A separate `app-oauth.js` file can be found with relevant OAuth settings.
-
-When using OAuth, Slack requires a public URL where it can send requests. In this template app, we've used [`ngrok`](https://ngrok.com/download). Checkout [this guide](https://ngrok.com/docs#getting-started-expose) for setting it up.
-
-Start `ngrok` to access the app on an external network and create a redirect URL for OAuth. 
-
-```
-ngrok http 3000
-```
-
-This output should include a forwarding address for `http` and `https` (we'll use `https`). It should look something like the following:
-
-```
-Forwarding   https://3cb89939.ngrok.io -> http://localhost:3000
-```
-
-Navigate to **OAuth & Permissions** in your app configuration and click **Add a Redirect URL**. The redirect URL should be set to your `ngrok` forwarding address with the `slack/oauth_redirect` path appended. For example:
-
-```
-https://3cb89939.ngrok.io/slack/oauth_redirect
-```
