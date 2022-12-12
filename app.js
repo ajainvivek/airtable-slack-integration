@@ -1,17 +1,11 @@
 const { App, LogLevel } = require('@slack/bolt');
-// const Airtable = require('airtable');
 const { config } = require('dotenv');
 const { WebClient } = require('@slack/web-api');
-const { registerListeners } = require('./listeners');
 
 /** Load environment variables */
 config();
 
-/** Initialize Airtable */
-// const base = Airtable.configure({
-//   endpointUrl: 'https://api.airtable.com',
-//   apiKey: process.env.AIRTABLE_API_KEY,
-// }).base(process.env.AIRTABLE_BASE_ID);
+const { registerListeners } = require('./slack/listeners');
 
 const web = new WebClient(process.env.SLACK_BOT_TOKEN);
 

@@ -48,7 +48,15 @@ npm run lint
 
 `app.js` is the entry point for the application and is the file you'll run to start the server. This project aims to keep this file as thin as possible, primarily using it as a way to route inbound requests.
 
-### `/listeners`
+### `/slack/listeners`
 
-Every incoming request is routed to a "listener". Inside this directory, we group each listener based on the Slack Platform feature used, so `/listeners/shortcuts` handles incoming [Shortcuts](https://api.slack.com/interactivity/shortcuts) requests, `/listeners/views` handles [View submissions](https://api.slack.com/reference/interaction-payloads/views#view_submission) and so on.
+Every incoming request is routed to a "listener". Inside this directory, we group each listener based on the Slack Platform feature used, so `/slack//listeners/commands` contains all the listeners for Slack commands. Each listener is a function that takes a `payload` and `context` as arguments. The `payload` is the data sent from Slack, and the `context` is a set of utilities provided by Bolt.
+
+### `/slack/user-interfaces`
+
+This directory contains all the code for building Slack user interfaces.
+
+### `/airtable`
+
+This directory contains all the code for interacting with Airtable. It contains a `base.js` file that exports a configured Airtable base, and a `records.js` file that exports functions for interacting with Airtable records.
 
