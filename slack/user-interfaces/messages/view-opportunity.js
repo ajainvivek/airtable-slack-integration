@@ -1,5 +1,6 @@
 const { Message, Section, Actions, Divider, Button } = require('slack-block-builder');
 
+// UI for viewing an opportunity
 const viewOpportunity = (channel, opportunity) => {
   const {
     id,
@@ -13,8 +14,6 @@ const viewOpportunity = (channel, opportunity) => {
     priority = false,
     notes = '',
   } = opportunity;
-
-  console.log('opportunity', opportunity);
 
   return Message({
     text: 'Opportunity Details',
@@ -53,10 +52,19 @@ const viewOpportunity = (channel, opportunity) => {
       }),
       Divider(),
       Actions().elements(
+        // Update notes
         Button({
           text: 'Update Notes',
           actionId: 'update_notes',
-          value: id,
+          value: JSON.stringify({
+            id,
+            notes,
+          }),
+        }),
+        // Open link to opportunity in Airtable
+        Button({
+          text: 'Open in Airtable',
+          url: `https://airtable.com/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_TABLE_NAME}/${id}`,
         }),
       ),
     ).buildToObject();

@@ -1,5 +1,5 @@
-const { sampleActionCallback } = require('./sample-action');
+const { opportunityNotesActionCallback } = require('./opportunity-notes');
 
 module.exports.register = (app) => {
-  app.action('sample_action_id', sampleActionCallback);
+  app.action('update_notes', opportunityNotesActionCallback);
 };

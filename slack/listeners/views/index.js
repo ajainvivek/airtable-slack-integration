@@ -1,5 +1,5 @@
-const { sampleViewCallback } = require('./sample-view');
+const { updateNotesViewCallback } = require('./update-notes');
 
 module.exports.register = (app) => {
-  app.view('sample_view_id', sampleViewCallback);
+  app.view('update_notes_view', updateNotesViewCallback);
 };
