@@ -7,8 +7,8 @@ This is a Slack app that integrates with Airtable to streamline sales workflow. 
 This app allows you to:
 
 - Notify your team when a new opportunity is added to Airtable
-- Notify your team when an oppotunity status is updated
-- Slack commands to view and update opportunities
+- Notify your team when an opportunity status is updated
+- Slack commands to view opportunities and update opportunity notes
 
 ## Architecture
 

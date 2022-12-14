@@ -4,7 +4,6 @@ const { Message, Section, Actions, Divider, Button, Image } = require('slack-blo
 // UI for when an opportunity status is updated
 
 const opportunityStatusUpdated = (channel, opportunity) => {
-  console.log('opportunityStatusUpdated', opportunity);
   const {
     id,
     salesStage,
