@@ -37,24 +37,28 @@ const app = new App({
           data.push(chunk);
         });
         req.on('end', async () => {
-          const body = JSON.parse(data);
-          const webhookPayloads = await listWebhookPayloads(body.webhook.id);
-          const lastChange = webhookPayloads[webhookPayloads.length - 1];
-          const changedRecord = lastChange.changedTablesById[process.env.AIRTABLE_TABLE_NAME];
-          const changedRecordId = Object.keys(changedRecord.changedRecordsById)[0];
-          const opportunity = await viewOpportunity(changedRecordId);
-          let salesRep = {};
-          if (opportunity.rep && opportunity.rep.length > 0) {
-            salesRep = await getSalesRep(opportunity.rep[0]);
+          try {
+            const body = JSON.parse(data);
+            const webhookPayloads = await listWebhookPayloads(body.webhook.id);
+            const lastChange = webhookPayloads[webhookPayloads.length - 1];
+            const changedRecord = lastChange.changedTablesById[process.env.AIRTABLE_TABLE_NAME];
+            const changedRecordId = Object.keys(changedRecord.changedRecordsById)[0];
+            const opportunity = await viewOpportunity(changedRecordId);
+            let salesRep = {};
+            if (opportunity.rep && opportunity.rep.length > 0) {
+              salesRep = await getSalesRep(opportunity.rep[0]);
+            }
+            // send a message to the sales channel
+            web.chat.postMessage(
+              opportunityStatusUpdated(process.env.SLACK_SALES_CHANNEL_ID, {
+                id: changedRecordId,
+                salesRep,
+                ...opportunity,
+              }),
+            );
+          } catch (e) {
+            console.log(e);
           }
-          // send a message to the sales channel
-          web.chat.postMessage(
-            opportunityStatusUpdated(process.env.SLACK_SALES_CHANNEL_ID, {
-              id: changedRecordId,
-              salesRep,
-              ...opportunity,
-            }),
-          );
         });
         req.on('error', (err) => {
           console.log('Error: ', err);

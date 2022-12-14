@@ -67,7 +67,7 @@ const opportunityStatusUpdated = (channel, opportunity) => {
         text: `*Probability:*\n${probability}%`,
       }),
       Section({
-        text: `*Notes:*\n${notes}`,
+        text: `*Notes:*\n${notes || ''}`,
       }),
       Divider(),
       Actions().elements(
