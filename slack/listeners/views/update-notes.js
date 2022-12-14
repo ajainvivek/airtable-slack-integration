@@ -1,5 +1,6 @@
 const { updateOpportunityNotes } = require('../../../airtable/records');
 
+// Update notes on existing opportunity
 const updateNotesViewCallback = async ({ ack, view, body, client }) => {
   await ack();
 
@@ -7,7 +8,6 @@ const updateNotesViewCallback = async ({ ack, view, body, client }) => {
     const formValues = view.state.values;
     const noteInputValue = formValues.block_notes.notes.value;
     try {
-      console.log("VIEW", body.view);
       await updateOpportunityNotes(body.view.private_metadata, noteInputValue);
       client.chat.postMessage({
         channel: body.user.id,

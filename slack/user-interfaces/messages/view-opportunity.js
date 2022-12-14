@@ -21,6 +21,9 @@ const viewOpportunity = (channel, opportunity) => {
   })
     .blocks(
       Section({
+        text: '🗒️ *Opportunity Details:*',
+      }),
+      Section({
         text: `*Opportunity ID:*\n${id}`,
       }),
       Section({

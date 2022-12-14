@@ -1,4 +1,5 @@
 const lodash = require('lodash');
+const axios = require('axios');
 const base = require('./base');
 
 // View existing deal
@@ -23,4 +24,17 @@ const updateOpportunityNotes = async (opportunityId, notes) => {
   return opportunity;
 };
 
-module.exports = { viewOpportunity, updateOpportunityNotes, getSalesRep };
+// list webhook payloads
+const listWebhookPayloads = async (webhookId) => {
+  const response = await axios.get(
+    `https://api.airtable.com/v0/bases/${process.env.AIRTABLE_BASE_ID}/webhooks/${webhookId}/payloads`,
+    {
+      headers: {
+        Authorization: `Bearer ${process.env.AIRTABLE_API_KEY}`,
+      },
+    },
+  );
+  return response.data.payloads;
+};
+
+module.exports = { viewOpportunity, updateOpportunityNotes, getSalesRep, listWebhookPayloads };

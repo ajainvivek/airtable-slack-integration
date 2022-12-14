@@ -6,6 +6,8 @@ const { WebClient } = require('@slack/web-api');
 config();
 
 const { registerListeners } = require('./slack/listeners');
+const { viewOpportunity, listWebhookPayloads, getSalesRep } = require('./airtable/records');
+const opportunityStatusUpdated = require('./slack/user-interfaces/messages/opportunity-status-updated');
 
 const web = new WebClient(process.env.SLACK_BOT_TOKEN);
 
@@ -34,14 +36,25 @@ const app = new App({
         req.on('data', (chunk) => {
           data.push(chunk);
         });
-        req.on('end', () => {
+        req.on('end', async () => {
           const body = JSON.parse(data);
-          console.log(body);
+          const webhookPayloads = await listWebhookPayloads(body.webhook.id);
+          const lastChange = webhookPayloads[webhookPayloads.length - 1];
+          const changedRecord = lastChange.changedTablesById[process.env.AIRTABLE_TABLE_NAME];
+          const changedRecordId = Object.keys(changedRecord.changedRecordsById)[0];
+          const opportunity = await viewOpportunity(changedRecordId);
+          let salesRep = {};
+          if (opportunity.rep && opportunity.rep.length > 0) {
+            salesRep = await getSalesRep(opportunity.rep[0]);
+          }
           // send a message to the sales channel
-          web.chat.postMessage({
-            channel: 'C04ERECTNE8',
-            text: 'New deal created',
-          });
+          web.chat.postMessage(
+            opportunityStatusUpdated(process.env.SLACK_SALES_CHANNEL_ID, {
+              id: changedRecordId,
+              salesRep,
+              ...opportunity,
+            }),
+          );
         });
         req.on('error', (err) => {
           console.log('Error: ', err);
